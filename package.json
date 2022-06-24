@@ -1,0 +1,16 @@
+{
+  "name": "user-authentication",
+  "version": "1.0.0",
+  "description": "This app is designed to get idea about the user authoentication in a web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeewantha Udeshika",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.4.0",
+    "nodemon": "^2.0.18"
+  }
+}
