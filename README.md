@@ -23,5 +23,15 @@ jwt.sign() is used to make the token that send to the client as a cookie.
 ### Protect the routes
 To prevent unauthenticated users from accessing the private route, take the token from the cookie, verify the token, and redirect users based on role.
 For that ``cookie-parser`` package used.
- 
+
+### LogOut  functionality
+To log out users, you need to remove the token from the client and redirect the client to the home page.
+
+You'll create a GET request to /logout in the server.js file:
+```
+app.get("/logout", (req, res) => {
+  res.cookie("jwt", "", { maxAge: "1" })
+  res.redirect("/")
+})
+```
 
