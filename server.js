@@ -6,6 +6,7 @@ import express from "express";
 import { connectDB } from "./database.js";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";   // Package for use custo middleswares
 
 import routes from "./Auth/routes.js";
 
@@ -22,6 +23,7 @@ connectDB();
 // Make the encription method
 app.use(bodyParser.urlencoded({extended: "true"}));
 app.use(bodyParser.json({extended: "true"}));
+app.use(cookieParser());
 
 // Get routers from the file
 app.use('/', routes);
