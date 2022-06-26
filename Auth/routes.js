@@ -21,4 +21,6 @@ router.post("/api/user/update", adminAuth, update);     // Only admins can updat
 // Router for the delete user
 router.post("/api/user/delete", adminAuth, deleteUser); // Only admins can delete
 
+
+
 export default router;

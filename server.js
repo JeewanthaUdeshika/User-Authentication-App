@@ -17,6 +17,8 @@ const app = express();
 
 const PORT = process.env.PORT || 8080;
 
+app.set("view engine", "ejs");      // Set the view engine as ejs
+
 // Connect the database
 connectDB();
 
