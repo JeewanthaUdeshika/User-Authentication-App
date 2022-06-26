@@ -3,6 +3,7 @@
  */
 
 import { User } from "../model/user.js"; // Get the user model from the model
+import bycript from "bcrypt";           // Module for the encrypt passwords
 
 // function for the register route
 export const register = async (req, res) => {
@@ -14,13 +15,17 @@ export const register = async (req, res) => {
         return res.status(400).send({message: "Password less than 6 chars"});
     }
     try{
-        await User.create({
-            username,
-            password
+        // encrypt the password
+        bycript.hash(password, 10).then(async hash =>{
+            await User.create({
+                username,
+                password: hash  // Store the encrypted password in the database
+            })
+            .then(user => {
+                res.status(208).send({message: "User successfully created", user});
+            })
         })
-        .then(user => {
-            res.status(208).send({message: "User successfully created", user});
-        })}
+    }
     catch(err){
         res.status(401).send({message: "User not created", error: err.message})
     }
@@ -39,7 +44,7 @@ export const login = async (req, res) => {
     // If username and password present
     try{
         // find in the database
-        const user = await User.findOne({username, password});
+        const user = await User.findOne({username});
 
         if (!user){
             res.status(401).send({
@@ -48,9 +53,19 @@ export const login = async (req, res) => {
             })
         }
         else{
-            res.status(200).send({
-                message: "Login Successfull",
-                user
+            // Compare the password with hashed one
+            bycript.compare(password, user.password).then(result =>{
+              if (result){
+                res.status(200).send({
+                    message: "Login Successfull",
+                    user
+                })
+              }
+              else{
+                res.status(400).send({
+                    message: "Username or Password incorrect"
+                })
+              }  
             })
         }
     }
@@ -64,8 +79,63 @@ export const login = async (req, res) => {
 
 }
 
-/* // Function for the update the user role
-export const update = (req, res) => {
+// Function for the update the user role
+export const update = async (req, res) => {
     // Getting the role and id from the body
-    
-} */
+    const {role, id} = req.body;
+
+    // Verify the role and id present
+    if (role && id) {
+        // Check the user added role is admin
+        if (role == "admin"){
+            await User.findById(id)
+            .then(user =>{
+                // Verify the user is not admin
+                if (user.role !== "admin"){
+                    user.role = role;
+                    user.save(err => {
+                        // If there is error in save
+                        if (err) {
+                            res.status(400).send({
+                                message: "An error occured",
+                                error: err.message
+                            });
+                            process.exit(1);
+                        }
+
+                        // If there is no error
+                        res.status(201).send({message: "Update successfully"});
+                    })
+                }
+                else{
+                    res.status(400).send({message: "User is already  admin"});
+                }
+            })
+            .catch(error => {
+                res.status(400).send({
+                    message: "An error occured",
+                    error: error.message
+                });
+            })
+        }
+        
+    }
+}
+
+
+// Function for the delete specific user from the database
+export const deleteUser = async (req, res) => {
+    // Get the id of the user to delete
+    const {id} = req.body;
+
+    await User.findById(id)
+    .then(user=>{
+        user.remove()
+    })
+    .then(user=>{
+        res.status(201).send({message: "User Removed", user});
+    })
+    .catch(error =>{
+        res.status(400).send({message: "An error occured", error: error.message})
+    })
+}

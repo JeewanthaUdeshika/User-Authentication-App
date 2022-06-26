@@ -3,7 +3,7 @@
  */
 
 import express from "express";
-import { login, register } from "./auth.js";
+import { deleteUser, login, register, update } from "./auth.js";
 
 // Get router from the express
 const router = express.Router();
@@ -13,5 +13,11 @@ router.post("/api/user/register", register);
 
 // Router for the login
 router.post("/api/user/login", login);
+
+// Router for the update
+router.post("/api/user/update", update);
+
+// Router for the delete user
+router.post("/api/user/delete", deleteUser);
 
 export default router;
