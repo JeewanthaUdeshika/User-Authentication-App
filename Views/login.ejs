@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register Page</title>
+    <title>Login Page</title>
   </head>
   <body>
-    <h1>Register Page</h1>
-    <form method="post" action="/api/user/register">
+    <h1>Login Page</h1>
+    <form method="post" action="/api/user/login">
       <div class="error" style="background-color: red;"></div>
       <br />
       <label for="username">Username</label><br />
@@ -16,6 +16,6 @@
       <input type="password" name="password" required /><br />
       <input type="submit" value="register" /><br />
     </form>
-    <a href="/login">Already registered? Login</a>
+    <a href="/register">Dont have an account? Register</a>
   </body>
 </html>

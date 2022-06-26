@@ -21,6 +21,14 @@ router.post("/api/user/update", adminAuth, update);     // Only admins can updat
 // Router for the delete user
 router.post("/api/user/delete", adminAuth, deleteUser); // Only admins can delete
 
+// Router for the homepage
+router.get("/", (req, res) =>  res.render("home"));
+
+// Router for the register page
+router.get("/register", (req, res) =>  res.render("register"));
+
+// Router for the login page
+router.get("/login", (req, res) =>  res.render("login"));
 
 
 export default router;
