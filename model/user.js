@@ -1,7 +1,7 @@
 /**
  * This file contains all the user side blueprtint of the document
  */
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username: {

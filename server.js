@@ -5,6 +5,9 @@
 import express from "express";
 import { connectDB } from "./database.js";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
+
+import routes from "./Auth/routes.js";
 
 dotenv.config({path: 'config.env'});    // Make source to dotenv file
 
@@ -15,6 +18,13 @@ const PORT = process.env.PORT || 8080;
 
 // Connect the database
 connectDB();
+
+// Make the encription method
+app.use(bodyParser.urlencoded({extended: "true"}));
+app.use(bodyParser.json({extended: "true"}));
+
+// Get routers from the file
+app.use('/', routes);
 
 app.listen(PORT, () => {
     console.log(`Server Connected to http://localhost:${PORT}`);
