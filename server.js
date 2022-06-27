@@ -14,6 +14,7 @@ dotenv.config({path: 'config.env'});    // Make source to dotenv file
 
 // Get Express object
 const app = express();
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 8080;
 
@@ -25,7 +26,7 @@ connectDB();
 // Make the encription method
 app.use(bodyParser.urlencoded({extended: "true"}));
 app.use(bodyParser.json({extended: "true"}));
-app.use(cookieParser());
+
 
 // Get routers from the file
 app.use('/', routes);

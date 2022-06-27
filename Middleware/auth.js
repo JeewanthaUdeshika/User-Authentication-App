@@ -2,21 +2,23 @@
  * This file contains all the middlewares made to authorizations
  */
 
-import jws from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import express from "express";
 
 dotenv.config({path: 'config.env'});    // Make source to dotenv file
 
 const jwtSecret = process.env.jwtSecret;
 
 // Authorization for the admin
-export const adminAuth = (res, req, next) => {
+export const adminAuth = (req, res, next) => {
     // Get the given cookie
-    const token = req.cookies.JWT;
+    const token = req.cookies.jwt;
 
     // Check there is token given
     if (token){
-        jwtSecret.verify(token, jwtSecret, (err, decordedToken) => {
+        jwt.verify(token, jwtSecret, (err, decordedToken) => {
             // If there is an error
             if (err){
                 return res.status(401).send({message: "Not authorized"})
@@ -37,11 +39,11 @@ export const adminAuth = (res, req, next) => {
     }
 }
 
-
 // Authorization for the basic user
 export const userAuth = (res, req, next) => {
     // Get the given cookie
-    const token = req.cookies.JWT;
+    const authHeader = req.headers['accessToken'];
+    const token = authHeader && authHeader.split(' ')[1];
 
     // Check there is token given
     if (token){
@@ -64,4 +66,10 @@ export const userAuth = (res, req, next) => {
     else{
         return res.status(401).send({message: "Not authorized, token not available"})
     }
+}
+
+
+// Protect function to check
+export const protect = async (req, res, next) => {
+
 }

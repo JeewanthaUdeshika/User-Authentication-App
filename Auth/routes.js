@@ -3,7 +3,7 @@
  */
 
 import express from "express";
-import { deleteUser, login, register, update } from "./auth.js";
+import { deleteUser, getUser, login, register, update } from "./auth.js";
 import { adminAuth, userAuth } from "../Middleware/auth.js";
 
 // Get router from the express
@@ -29,6 +29,9 @@ router.get("/register", (req, res) =>  res.render("register"));
 
 // Router for the login page
 router.get("/login", (req, res) =>  res.render("login"));
+
+// Rouuter for the get user details
+router.get("/user", adminAuth, getUser);
 
 
 export default router;

@@ -39,9 +39,10 @@ export const register = async (req, res) => {
                 );
 
                 // Sending a cookie to the user
-                res.cookie("JWT", token, {
+                res.cookie("jwt", token, {
                     httpOnly: true,
-                    maxAge: maxAge*1000     // 3hrs in ms
+                    maxAge: maxAge*1000,     // 3hrs in ms
+                    secure: false
                 });
                 res.status(208).send({message: "User successfully created", user});
             })
@@ -87,17 +88,22 @@ export const login = async (req, res) => {
                         expiresIn: maxAge
                     }
                 );
+                
 
                 // Send it as cookie
-                res.cookie("JWT", token, {
+                res.cookie("jwt", token, {
                     httpOnly: true,
                     maxAge: maxAge * 1000,
+                    secure: false
                 });
-                
-                res.status(200).send({
+                console.log("login...")
+                /* res.status(200).send({
                     message: "Login Successfull",
                     user: user.__id
-                });
+                }); */
+                res.render("logHome");
+
+                //return res.status(200).json({message: "Successfully logged"});
               }
               else{
                 res.status(400).send({
@@ -164,9 +170,9 @@ export const update = async (req, res) => {
 // Function for the delete specific user from the database
 export const deleteUser = async (req, res) => {
     // Get the id of the user to delete
-    const {id} = req.body;
+    const {username} = req.body;
 
-    await User.findById(id)
+    await User.findOne({username})
     .then(user=>{
         user.remove()
     })
@@ -176,4 +182,22 @@ export const deleteUser = async (req, res) => {
     .catch(error =>{
         res.status(400).send({message: "An error occured", error: error.message})
     })
+}
+
+// Function to get user
+export const getUser = async (req, res) => {
+    const userID = req.id;
+    let user;
+    try{
+        // Getting user details without user password
+        user = await User.findById(userID, "-password");
+    }
+    catch(err){
+        return res.status(400).send({message: "Error Occured while getting user", error: err});
+    }
+    // If there is no user in the database
+    if(!user){
+        return res.status(404).send({message: "User not found"});
+    }
+    return res.status(200).send({user});
 }

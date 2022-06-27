@@ -35,3 +35,5 @@ app.get("/logout", (req, res) => {
 })
 ```
 
+You can decode the JWT tokens from [JWT official site](jwt.io)
+
