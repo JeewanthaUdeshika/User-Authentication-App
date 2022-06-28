@@ -69,7 +69,50 @@ export const userAuth = (res, req, next) => {
 }
 
 
-// Protect function to check
+/* // Protect function to check
 export const protect = async (req, res, next) => {
 
+} */
+
+export const refreshToken = (req, res, next) => {
+    // Get the given cookie
+    const prevToken = req.cookies.jwt;
+
+    // Check there is token given
+    if (prevToken){
+        jwt.verify(prevToken, jwtSecret, (err, user) => {
+            // If there is an error
+            if (err){
+                return res.status(401).send({message: "Not authorized"})
+            }
+            else{
+                // Clear the current cookie
+                res.clearCookie('jwt');
+                req.cookies[`${user}`] = "";
+
+                // Create a new token
+                const token = jwt.sign(
+                    {id: user.__id, username:user.username, role: user.role },
+                    jwtSecret,
+                    {
+                        expiresIn: "2hr"
+                    }
+                );
+                
+
+                // Send it as cookie
+                res.cookie("jwt", token, {
+                    httpOnly: true,
+                    maxAge: maxAge * 1000,
+                    secure: false
+                });
+
+                req.id = user.id;
+                next();
+            }
+        })
+    }
+    else{
+        return res.status(401).send({message: "Not authorized, token not available"})
+    }
 }
