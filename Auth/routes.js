@@ -3,8 +3,8 @@
  */
 
 import express from "express";
-import { deleteUser, getUser, login, register, update } from "./auth.js";
-import { adminAuth, userAuth } from "../Middleware/auth.js";
+import { deleteUser, getUser, login, logout, register, update } from "./auth.js";
+import { adminAuth, refreshToken, userAuth } from "../Middleware/auth.js";
 
 // Get router from the express
 const router = express.Router();
@@ -32,6 +32,12 @@ router.get("/login", (req, res) =>  res.render("login"));
 
 // Rouuter for the get user details
 router.get("/user", adminAuth, getUser);
+
+// Router for  refresh the token
+router.get('/refresh', refreshToken, adminAuth, getUser);
+
+// Router for the logouut
+router.post('/user/logout', adminAuth, logout);
 
 
 export default router;

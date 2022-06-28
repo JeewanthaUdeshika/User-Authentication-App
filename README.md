@@ -37,3 +37,6 @@ app.get("/logout", (req, res) => {
 
 You can decode the JWT tokens from [JWT official site](jwt.io)
 
+### Expiring the Token cookie
+After the time we assigned to the token, it will be expired and it gives an error
+So, we should handle it. For that, we will make new route to refrsh the cookie.

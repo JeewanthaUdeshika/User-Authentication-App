@@ -96,14 +96,8 @@ export const login = async (req, res) => {
                     maxAge: maxAge * 1000,
                     secure: false
                 });
-                console.log("login...")
-                /* res.status(200).send({
-                    message: "Login Successfull",
-                    user: user.__id
-                }); */
                 res.render("logHome");
-
-                //return res.status(200).json({message: "Successfully logged"});
+                
               }
               else{
                 res.status(400).send({
@@ -200,4 +194,28 @@ export const getUser = async (req, res) => {
         return res.status(404).send({message: "User not found"});
     }
     return res.status(200).send({user});
+}
+
+// Function for logout
+export const logout = (req, res) => {
+    // Get the given cookie
+    const token = req.cookies.jwt;
+
+    // Check there is token given
+    if (token){
+        jwt.verify(token, jwtsecret, (err, decordedToken) => {
+            // If there is an error
+            if (err){
+                return res.status(401).send({message: "Not authorized"})
+            }
+            else{
+               // Clear the cookie
+               res.cookie("jwt", "", { maxAge: "1" });
+               return res.status(200).json({message: "SuccessFuly logged out"});
+            }
+        })
+    }
+    else{
+        return res.status(401).send({message: "Not authorized, token not available"})
+    }
 }
